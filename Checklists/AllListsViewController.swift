@@ -8,7 +8,7 @@
 
 import UIKit
  
-class AllListsViewController: UITableViewController, ListDetailViewControllerDelegate {
+class AllListsViewController: UITableViewController, ListDetailViewControllerDelegate, UINavigationControllerDelegate {
     let cellIdentifier = "ChecklistCell"
     
     var dataModel: DataModel!
@@ -20,6 +20,21 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
 
         // Because not using the prototype cell in storyboard
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
+    }
+    
+    // If user was on ChecklistVC when the app terminated prematurely,
+    // display it when the app starts back up
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        navigationController?.delegate = self
+        
+        let index = dataModel.indexOfSelectedChecklist
+        
+        if index >= 0 && index < dataModel.lists.count {
+            let checklist = dataModel.lists[index] // get the specific list
+            performSegue(withIdentifier: "ShowChecklist", sender: checklist)
+        }
     }
     
     // MARK: - Table view data source
@@ -47,6 +62,10 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Keep track of specific list the user is displaying
+        // in case the app terminates
+        dataModel.indexOfSelectedChecklist = indexPath.row
+        
         let checklist = dataModel.lists[indexPath.row]
         
         // perform segue MANUALLY because didn't hook up the segue to the prototype cell
@@ -102,5 +121,13 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         controller.checklistToEdit = checklist
         
         navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    //MARK: - Navigation Controller Delegates
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        // back button tapped? (going from ChecklistVC back to AllListsVC)
+        if viewController === self {
+            dataModel.indexOfSelectedChecklist = -1
+        }
     }
 }
