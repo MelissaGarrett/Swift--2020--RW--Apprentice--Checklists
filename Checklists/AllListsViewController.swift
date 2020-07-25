@@ -17,9 +17,6 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         super.viewDidLoad()
         
         navigationController?.navigationBar.prefersLargeTitles = true
-
-        // Because not using the prototype cell in storyboard
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
     }
     
     // If user was on ChecklistVC when the app terminated prematurely,
@@ -37,6 +34,13 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         }
     }
     
+    // reloadData() to cause cellForRowAt() to be called again
+    // to update the table cells (and the number of unchecked items)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+    
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -44,9 +48,23 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
+        //Create subtitle cells (each cell will have two lines of text)
+        let cell: UITableViewCell!
+        if let c = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) {
+            cell = c
+        } else {
+            cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
+        }
 
         let checklist = dataModel.lists[indexPath.row]
+        let count = checklist.countUncheckedItems()
+        
+        if checklist.items.count == 0 {
+            cell.detailTextLabel!.text = "(No Items)"
+        } else {
+            cell.detailTextLabel!.text = count == 0 ? "All Done!" : "\(count) Remaining"
+        }
+        
         cell.textLabel!.text = checklist.name
         cell.accessoryType = .detailDisclosureButton
 
