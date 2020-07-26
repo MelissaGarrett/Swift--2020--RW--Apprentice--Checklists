@@ -67,6 +67,7 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         
         cell.textLabel!.text = checklist.name
         cell.accessoryType = .detailDisclosureButton
+        cell.imageView!.image = UIImage(named: checklist.iconName)
 
         return cell
     }
