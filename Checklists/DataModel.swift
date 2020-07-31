@@ -89,4 +89,16 @@ class DataModel {
                 == .orderedAscending
         })
     }
+    
+    // A Class method
+    // Generate a unique itemID for each ChecklistItem (will start at 0),
+    // then save to UserDefaults
+    class func nextChecklistItemID() -> Int {
+        let userDefaults = UserDefaults.standard
+        let itemID = userDefaults.integer(forKey: "ChecklistItemID")
+        userDefaults.set(itemID + 1, forKey: "ChecklistItemID")
+        userDefaults.synchronize()
+        
+        return itemID
+    }
 }
