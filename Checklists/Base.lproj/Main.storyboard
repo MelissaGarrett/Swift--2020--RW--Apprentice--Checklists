@@ -296,6 +296,9 @@
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Eg9-pc-51n">
                                                     <rect key="frame" x="345" y="6" width="51" height="31.5"/>
+                                                    <connections>
+                                                        <action selector="shouldRemindToggled:" destination="ayb-ku-s3S" eventType="valueChanged" id="6Mz-7V-1j4"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                             <constraints>

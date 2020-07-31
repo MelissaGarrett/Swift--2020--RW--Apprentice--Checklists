@@ -59,8 +59,7 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
     // Update the view
     func configureText(for cell: UITableViewCell, with item: ChecklistItem) {
         let label = cell.viewWithTag(1000) as! UILabel
-        //label.text = item.text
-        label.text = "\(item.itemID): \(item.text)"
+        label.text = item.text
     }
     
     // Update the view
